@@ -1,0 +1,171 @@
+.parking-legend {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  font-size: 14px;
+  z-index: 2;
+}
+
+.parking-legend h4 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+.legend-color-small {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #4b4b4b;
+}
+.legend-color.green,.legend-color-small.green {
+  background-color: #29d543;
+}
+
+.legend-color.yellow,.legend-color-small.yellow {
+  background-color: #FFC107;
+}
+
+.legend-color.red,.legend-color-small.red {
+  background-color: #ee3f29;
+}
+
+/* ----- button -----*/
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.custom-btn-shadow-nearby-nonactive{
+  box-shadow: 2px 2px 0px rgba(223, 185, 83, 0.986);
+}
+.custom-btn-shadow-nearby-active{
+  box-shadow: 2px 2px 0px rgba(221, 187, 95, 0.986);
+}
+
+/* ----- animation -----*/
+.animation-transform-display{
+  animation-name: transformDisplay;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+.animation-transform-display-close{
+  animation-name: transformYDisplay;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+.animation-shadow-display{
+  animation-name: boxShadowDisplay;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+.animation-close-Legend {
+  animation-name: closeLegend;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+.animation-open-Legend{
+  animation-name: openLegend;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+.animation-open-Legend-text{
+  animation-name: openLegendText;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+}
+
+@keyframes openLegendText{
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+@keyframes openLegend {
+  0% {
+    max-height: 0px;
+    max-width: 0px;
+    display: none;
+  }
+  100% {
+    max-height: 500px;
+    max-width: 500px;
+    display: block;
+  }
+}
+@keyframes closeLegend {
+  0% {
+    max-height: 500px;
+    max-width: 500px;
+    display: block;
+  }
+  100% {
+    max-height: 0px;
+    max-width: 0px;
+    display: none;
+  }
+}
+@keyframes transformDisplay {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-500px);
+  }
+}
+@keyframes transformYDisplay {
+  0% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+@keyframes boxShadowDisplay {
+  0% {
+    box-shadow: 2px 2px 0px rgba(223, 185, 83, 0.986);
+  }
+  100% {
+    box-shadow: 2px 2px 0px rgba(221, 187, 95, 0.986);
+  }
+  
+}

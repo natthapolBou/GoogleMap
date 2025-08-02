@@ -1,0 +1,312 @@
+<div class="w-full h-[100%] rounded-lg overflow-hidden shadow bg-white">
+  <!-- <iframe
+    width="100%"
+    height="100%"
+    style="border: 0"
+    loading="lazy"
+    allowfullscreen
+    referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.9442709680723!2d100.52920811483065!3d13.73671780145513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2992e91d50e47%3A0x2f083f114fc604e0!2sGrand%20Palace!5e0!3m2!1sen!2sth!4v1614774025174!5m2!1sen!2sth"
+  ></iframe> -->
+
+  <div class="flex flex-col py-6 px-1 justify-center items-center">
+    <div class="w-full px-2 ">
+      <!-- Search box -->
+      <div class="border-b border-gray-200 w-full pb-4 mb-2 flex space-x-2" *ngIf="!isCustomForm">
+        <input #searchBox id="search-box" 
+          class="border border-gray-300 text-gray-700 w-full text-sm rounded-lg px-3 py-2
+                  focus:outline-none focus:ring-2 focus:ring-gray-400
+          " 
+          type="text" 
+          [placeholder]="currentLanguage === 'TH' ? 'ค้นหาสถานที่' : 'Search for places'"
+        >
+        <button class="text-yellow-400 border border-gray-300 text-sm rounded-lg px-2 py-2 bg-white"
+          (click)="clearSearchBox()"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
+          <g fill="#494948" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(8.53333,8.53333)"><path d="M13,3c-0.26757,-0.00363 -0.52543,0.10012 -0.71593,0.28805c-0.1905,0.18793 -0.29774,0.44436 -0.29774,0.71195h-5.98633c-0.36064,-0.0051 -0.69608,0.18438 -0.87789,0.49587c-0.18181,0.3115 -0.18181,0.69676 0,1.00825c0.18181,0.3115 0.51725,0.50097 0.87789,0.49587h18c0.36064,0.0051 0.69608,-0.18438 0.87789,-0.49587c0.18181,-0.3115 0.18181,-0.69676 0,-1.00825c-0.18181,-0.3115 -0.51725,-0.50097 -0.87789,-0.49587h-5.98633c0,-0.26759 -0.10724,-0.52403 -0.29774,-0.71195c-0.1905,-0.18793 -0.44836,-0.29168 -0.71593,-0.28805zM6,8v16c0,1.105 0.895,2 2,2h14c1.105,0 2,-0.895 2,-2v-16z"></path></g></g>
+        </svg>
+        </button>
+
+      </div>
+      <!-- หัวหนังสือ Custom Form -->
+       <div class="border-b border-gray-200" *ngIf="isCustomForm">
+         <h1 class="text-[19px] font-bold text-center text-gray-800 "> กำหนดระยะทางที่ต้องการ</h1>
+       </div>
+      <!-------------------------------------- แถบช้างบน -------------------------------------->
+      <div class="flex flex-col mb-2 w-full bg-white rounded-b-full">
+        <div class="w-full flex " *ngIf="!isCustomForm">
+          <div class="w-full">
+            <button class="w-full  border border-white text-sm rounded-l-lg px-3 py-2"
+              [ngClass]="{
+                'bg-yellow-400 text-white custom-btn-shadow-nearby-nonactive': nearbyFormLocation !== 1,
+                'bg-white text-yellow-400 border-yellow-400 custom-btn-shadow-nearby-active': nearbyFormLocation === 1,
+              }"
+              (click)="clickNearbyForm(1);"
+            >{{
+              currentLanguage === "TH"
+              ? "ทั้งหมด"
+              : "All"}}</button>
+          </div>
+          <div class="w-full">
+            <button class="w-full border border-white text-sm rounded-r-lg px-3 py-2"
+              [ngClass]="{
+                'bg-yellow-400 text-white custom-btn-shadow-nearby-nonactive': nearbyFormLocation !== 2,
+                'bg-white text-yellow-400 border-yellow-400 custom-btn-shadow-nearby-active': nearbyFormLocation === 2,
+              }"
+            (click)="clickNearbyForm(2);"
+            >{{
+              currentLanguage === "TH"
+              ? "ใกล้ฉัน (10 Km)"
+              : "Nearby (10 Km)"}}</button>
+          </div>
+          <!---- ปุ่มกำหนดระยะทาง ---->
+          <button 
+            class="border border-gray-200 text-sm rounded-lg px-3 py-2 ml-2 "
+            style="box-shadow: 2px 2px 0px rgba(107, 107, 107, 0.986);"
+            (click)="toggleCustomForm()"
+            *ngIf="!isCustomForm"
+          >
+            <img src="data:image/png;base64,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" alt="map-marker--v1"
+              class="w-10 h-4 object-contain">
+          </button>
+        </div>
+        <div class="w-full" *ngIf="isCustomForm">
+          <!-- Radius Slider -->
+          <input
+            id="radiusSlider"
+            type="range"
+            min="1"
+            max="100"
+            step="1"
+            [(ngModel)]="selectedRadius"
+            (change)="onRadiusChange()"
+            class="
+                w-full accent-blue-600 border-gray-200 rounded-lg appearance-none h-2 bg-gray-200
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+              "
+          />
+          <p class="text-center text-sm text-gray-700">{{ selectedRadius }} Km</p>
+        </div>
+        <div class="flex justify-center items-center space-x-2 mt-2 relative">
+          <!---- ปุ่มปิดกำหนดระยะทาง ---->
+          <button 
+            class="border border-gray-200 text-sm rounded-lg px-3 py-1 w-full flex justify-center items-center animation-transform-display-close "
+            (click)="toggleCustomForm()"
+             *ngIf="isCustomForm"
+          >
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAADFElEQVR4nO3ZX4hMURwH8N9a1n9aSf4lMYWbuTPn+z07xkQjoiilmCiiKMoDxYMHDzx48EDxoCiKKIpSivIvRUSyCGtLssqfJPLfrv+d9kxdYzbWzs7MnT2fmrrNzD3n9ztn7p1zflfEcRzHcRzHcRzHcRynSGKx2AgANwHUm2PpSkiOIvmA5E/7eqS1HiNdgVIqQrLJJv7Evsxxk/lMKpnWelwg4ccm4VgsNhrAQ/MegOda64lSieLxuEfyWb6ffM4l8SIej8ekkpAEyZd2lhvz3fTq6uqGArhjB+E1yUlSCZRSGsArm9g9ksPa+q7v+0NI3rLffaO1TkmYAZgK4J1N6AbJwX87JxqN1pK8as/5oJSaIWFEchrJ9zaR68lkclA7zh0I4LI99yPJWRImJOcA+GwTuJhKpfq3tw3f9/uSPGfbaCE5T8JAKTWXZLO94V3wPK/f/7ZFsg/J03YQvpBcIOVMa70IwFeb/Ml0Ot2ro216nldD8rht8xvJZVKOlFJLbIBmtk5EIpGehWqbZA8AR23b30mukHJCcpUNzMzS4XQ63b3QfWQymWqS++0g/ACwVsoByfUmIBvYQRNoJ3bXDcDewCZqo5QSyQ3ZYADsNgEWodsqkjsC/W6VUiC5OTAT20xgxewfwJZSDUIVgO0ln4GcXyDJXcWYhCqSOwPJb5ISyxmEPZ12GWYymWoA+7J3YZLrpEwAWB24ER8q+L9QpjX5A4Hk10iZAbAy+1dM8ohZOxSkYc/zagAcy67EtNbLpUwBWJxdiRZkMeb9uQxdKmVOKbXQ7htMzKeSyWTvQmxEWrTW8yUkOrwh81u3oudt8s2h2YoGaK1nA/hkc7iUSCQG/HMxguSVQDFipoSU1jrdrqJMNBqtBXAtW44CMF1CjuQUAG/t5VDfZlnOby1I3s4WJJVSk6VC5BRmG5RSw/OVpO8GStIJqTBaaxUszScSiZF5H0oopXypUEqpCSSf/vZwBkBj4DndeKlwJsfA47kGMwBnzQHJsdJFmFxJ3gdwptSxOI7jOI7jOI7jOI4jRfcLj2ppRR7NPtYAAAAASUVORK5CYII=" alt="external-up-arrow-arrows-dreamstale-lineal-dreamstale-6"
+            class="w-10 h-6 object-contain">
+          </button>
+        </div>
+      </div>
+  </div>
+    <!-- Map Container -->
+    <div class="relative w-full h-[425px] overflow-hidden  shadow-sm border-b border-gray-200 mb-1">
+      <!-------------------------------------- ตัว UI แผนที่ -------------------------------------->
+      <!--- Right --->
+      <div class="absolute right-2 bottom-4 flex flex-col items-end space-y-1 z-[2]">
+        <!-- Legend -->
+        <div class="parking-legend w-[150px]" 
+          *ngIf="showLegendModal"
+          [ngClass]="{ 'animation-close-Legend': !showLegendModal, 'animation-open-Legend': showLegendModal }"
+          >
+          <div class="flex items-center justify-center p-1 bg-white rounded-lg relative border-b border-gray-300" (click)="toggleLegend()">
+            <img src="./icons/arrow-down.png" alt="Arrow Down" class="w-6 h-6">
+          </div>
+          <div class="py-2 px-4">
+            <h4>{{ currentLanguage === "TH" ? "ระดับที่จอดรถว่าง" : "Parking Level"}}</h4>
+            <div class="legend-item">
+              <span class="legend-color green"></span> 
+              {{ currentLanguage === "TH" ? "ว่างเยอะ" : "Many"}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color yellow"></span> 
+              {{ currentLanguage === "TH" ? "เหลือน้อย" : "Few left"}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color red"></span> 
+              {{ currentLanguage === "TH" ? "เต็ม" : "Full"}}
+            </div>
+          </div>
+        </div>
+        <!-- Recommend -->
+        <div class="relative bg-yellow-400 rounded-lg  p-2 mb-2 z-50"
+          (click)="toggleLegend()"
+          [ngClass]="
+          { 'animation-open-Legend-text': !showLegendModal
+          }"  
+          *ngIf="!showLegendModal"   
+        >
+          <label>{{ currentLanguage === "TH" ? "คำแนะนำ" : "Recommend"}}</label>
+        </div>
+
+      </div>
+      <!-- Left  -->
+      <div class="absolute left-2 bottom-4 flex flex-col items-start space-y-2 z-[1] w-full">
+
+        <!-- Current Location -->
+        <div class="relative bg-white rounded-full z-2 p-2 ml-1 flex items-center justify-center shadow-md w-10 h-10  ">
+          <button (click)="centerMapOnButtonLocation()">
+            <img src="./icons/current-position.png" alt="Legend" class="w-full h-full object-contain">
+          </button>
+        </div>
+        <!-- Sub Buttons (shown when menuOpen is true) -->
+        <div
+          *ngIf="menuOpen"
+          class="flex flex-col justify-center items-start space-y-2 animate-slide-in animation-open-Legend p-1"
+        >
+          <button
+            class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md transition transform hover:scale-105 p-2"
+            [ngClass]="{
+              'my-theme-background-color bg-opacity-80 text-white ': activeIndex === 0,
+              'bg-white text-yellow-400 border-yellow-400 custom-btn-shadow animation-shadow-display': activeIndex !== 0,
+            }"
+            (click)="selectColor(0, '#f91c1c')" 
+          >
+           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFPElEQVR4nO3YSVPbBhgGYA8pPeSYtKekPXWmEJYSzJ5g4w0bMJjFsg3GBgzINl7YQgAH0KUTck8yJJOfwCQ9tMmlv6IZ8gNK0kvB8m5LtjxfRzABJC+SLEEvvDPf+Pq8spZPksmuc53riA4gshthRU0nrqgNhZW1b/Geuk+4ug7H1fVZXNOQxTWNeETbeBDVNb2NaptCMUNzB2CyKtn/nXB33Q+4svYZrqj9gvfcA1xVBxF1PUTUDRDRNEJE2wgR3S8Q1TVBtPc+RPXNEDXQI4don/xzrK9l99jQdvfK4fGHP32PK2tfh5U1ZCG8gQPeArH+VogNtJ1MdKCdjA2278WN8u+uBI8rfp4IK2vC/OD3C+H9p/CYsR1igx0QH+yE+FAXPceJkU7bpcFBLq/GFbVvSsK1LLieDW9lwGNf4aYuiA8/gPjwQ4iPdENiVPEKUHm1pPh/5PKbeM+9DydwlRTwzmJwSIzRo4S4WfkejMab0h35nroPp/B6BjwiCbz7DJ4w90ACUUECUUMSUf0JCPKt6AK4qv5NcXiTePgoG66CpEUNSasGkjYtJKy6PXF4Tb2dH7yFCTey4CZh8KRNB8lxHaQmeiE90WutCB/T1NzGtQ1HZeF9xeAdksBTdj2k7AZITfaF4+NG4bdYXNv4+gzeWyn8oSB4kgmHlIOefkg7B14Kwh8bGu5GdE2ktPCe8vCJonBITxkhNW0k0w7jj7wLRHVNz87hckHwOBtuZsGt/OHp6cHTmRmClMu0ywtPL1lRffNnwfARPnCtYHjaZYLM7DA9XwBBbnAWiOnvd0YL4O3n8CGp4Aae8BHIzI1AZn4UUrNIG/fp09cSOl20SsEfXALcyIS7mPDM/BgQqBkIFNngLtDf/o4/XCkOPlUMPsyAZ2i4GwHCg0DGY9nnLmDsOKgMrjmHj7Pgk5XCzSdwwmMBwmuFjNf6kbNAfLArzBtuKQXXM+ApkXBiwQakzwaEz3bEWSBmekAWwMfEwAfEwRdo/DiQ/gkg/HaCu8BwN3lxtT17ekoCN5WGu0vDyYAdyMAkEEEeBRKjinAhXF05fIYFn/sKH+MNJ4OTkF10ALno5D6F4mblQXl4b3G4UwzcWhaeXXJCdmmKHu6LOGFRvSsLt1+E918C3F4IX56G7Mo0/ct9G01a1aHzRUsIfEgQnCgHX2TBV2Ygt+qC7KprnbNAyqLtuDS4lwX3l4JPMeC5R7OQW5uD7Op8K2cBwLCqpF1/yAeeLoCPnsJRKeGzp/i1ub9pG2eBk39hsm+XF3y2HNwiCTz3eB6odRRy6+hTXviTAnbD3ZSznzzfEMXCJyqGU+tuyG2gBITcd2RCkp4e3Cu+2oqFO4vDHxXCqQ03UJseyG16n8uEJjqL3ErPmI7YO7lgeJAFX74IdzHgORacCnkhF/IeA4ZW9t007RqxFYcjhXCfWDjKgFOhBcg/8QH1xI9UhD8rgY6+YsA9bPiFe3mQfnpKAV+A/JYP8tv+FzKxod9DM27zb/zgDmngW37IbwX+AAz7RnSBkxKo8WbGa30vDD5TCH/Mgm8WgW8H6PkdMFSaj7vnJdBqwj++xwu+yobP84PvBCGPBV9IduSLhVx0WMmg44i5aImHU1jwX9hZFHfB8g34HLfJpamX5Mo0wR/uLQUn8juLzwFbvnUleEaRZeed3KprN7s2d1gOThXAA0DtBA7zWPAp/Los7Al7KUUwrCr72N1GraMb1IZnn9r0fMxtesO50AJJ0fPEF6a2/H/lt/371E5gHbaDrbwXs+tc5zqycvkPN6NN6PAkfacAAAAASUVORK5CYII=" 
+              alt="circled"
+              class="border border-gray-200 rounded-full"
+            > 
+
+          </button>
+
+          <button
+            class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md transition transform hover:scale-105 p-2"
+            [ngClass]="{
+              'my-theme-background-color bg-opacity-80 text-white ': activeIndex === 1,
+              'bg-white text-yellow-400 border-yellow-400 custom-btn-shadow animation-shadow-display': activeIndex !== 1,
+            }"
+            (click)="selectColor(1, '#ffd047')" 
+          >
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFUklEQVR4nO3Y2VcTZxgG8BwtGnGBAmoFVCx1r1ahULHuC9a1LkVRi/tS6lJRqpiK3In36kGP/4Ee7UWrN15I9pBM1pn0tJdVe1PEo8nMZGaSydMTo2JMMl9CEnrDc87c/54vM++8GZVqKEMZSsbBHdVwdKvr0K3WQKu+B22+V9aOfiFrx0qytkCS9YUvZF0hI+uK70FXooF+wiJANez/h2vVk6EdeRXakc+gHQXoRiOsG4OwbizCugKE9YUI6z9GWF+MsL4Esn48ZMNEyIZPENJPeiobSjthKSsffLhuzHhoR9xCt1qMwvNThsuGUsiGMsjGcsjGKQgapohBY0UXqBklg4PvztuD7pF98fBxBPikGHjIOBUhYwVCpk8RMlUiaKx8HjJOb8wdnFLloVt9+y0cWYKHTJ8hZJqBkHkmguZZCJpn3wRVnZdtfD606odxcN1beBEBPjkF+BwEzXMRNM+DZJn/AFR1frbwedCOekiGTyDApxHgnyNomY+g5QsELQshWqoegZkzIvMCutG3k8HDA4GblOALIFmqIPVUQ+qpgWip7coMrx23NwovIMBLCfDpacGlnlpIPV9BstZBtC7eNTD8o7HFsq6gN3vw2QT4lzFwyboYovVrCNalfaCWpz9iZX3hrSi8WBEenSzZgi96BxetSyFal0G0LYdgW3kjvdN/XFQu64rFfvjE5HDjtDeTRQk+b0Bw0bYSom0VBOsqkafWTEnj9EuuZh++MB7e8z58SRxctK2GQK2FQNUjQK3rTO30oRoW0k942g8vI8AjIzF3cIFaB4FaH7me4U7DcHIBQ2ldPHwqAT6HAK8hwFckh9s3QLBvhGDfDM62tZZYIGQo0+QGXkeAr0kKD9i3IGD/Frxjaxv5/jdMvh8LryTAI5Nlweu3p2TJDTzg2IaAYzsC9h13yb+AsYJJH15FgC8lwL+BQCnAHTsQcDSAd+z0EAsEjZV9/fCZWYSvJMA3JYUHnDvBO3eBdzb2plBguhgLn0uA176DSzmD7wbv3APOuVcgFpBMs8T04YsJ8LUE+FZFOO/aC97VBM7ZlEIB89y+yE7+/mo7OPDvksJ51z7wrv3gXAdSuIXM85hYeDUBviwGLto+hK/PAvwgOPchcK7D5IdYMi+4nz58FQG+mQBvjMKdSeDuw+DcR8G6jpLHqGSp0ny4kw8O/PukcM59DJznOFhP84UUCtQu+nAnV4bXx8GFGPi2jOGcpxms50dwdHNNSsuc1FP3JHa1zRTeQIAfUISznhPwe07+DXSk9jVPtC7pjN8QE8E3KMMd6cCPJISz9Cmw9Gn46dNXVKmGsywvF6wrxPgNMRF8S0J44B1898DgniicpX+C39MicM6WMlU6Eayru7IHbyLAf0gIZ+kWsPRZ+Oiz11TpBqb6IoGq71WGb88p3M+cg59ufe778+zAvpuK9o2NZPjOpHD+NfwgAX4yMZz5GX7mPPzetgZVJuGpzTcD9kzhRwnwM/Fw5gJ83rbrqkwT+R8asG/7NTF8DxnuTh/u916En7n4Ox53fJRxgdclqE35vLPhQWL4PkV4dLIowVtj4V5N5PrtH6ojOx93+0scy+Odu7tyA297A/8Fr7zt17N28onCu5p28a79vVH4IQL8VAycVYIz7f/6vZcze2BTzas/mopZ1+EbrOuIEJ0sSvAWAvyS4PNevvaS6ShSDXY45/Eyzt3c6XefeJISnHn/Vrn05JW3/Qr3lya9N2wuElmyOKallvWcaWM9LXdZ5pzHT7f2+ehW0UefF/10W5/Pq3H7vZq7PubShZd0e03Ki9lQhjIUlVL+A28vWg9DANK/AAAAAElFTkSuQmCC" 
+              alt="circled"
+              class="border border-gray-200 rounded-full"
+            >
+          </button>
+
+          <button
+            class=" bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md transition transform hover:scale-105 p-2"
+            [ngClass]="{
+              'bg-yellow-400 bg-opacity-80 text-white ': activeIndex === 2,
+              'bg-white text-yellow-400 border-yellow-400 custom-btn-shadow animation-shadow-display': activeIndex !== 2,
+            }"
+            (click)="selectColor(2, '#29d543')"
+          >
+            <img src="data:image/png;base64,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" 
+              alt="circled"
+              class="border border-gray-200 rounded-full"
+            >
+          </button>
+        </div>
+        
+        <div class="px-1">
+          <!-- Main Menu Button -->
+          <button
+            class="bg-white text-gray-600 rounded-full w-10 h-10 
+                  flex items-center justify-center transition transform hover:scale-105 shadow-lg"
+            [ngClass]="{ 'bg-yellow-400 text-white': menuOpen, 'bg-white text-gray-600': !menuOpen }"
+            (click)="toggleMenu()"
+          >
+            ☰ 
+          </button>
+        </div>
+      </div>
+
+
+      <!-------------------------------------- แผนที่ -------------------------------------->
+      <!-- Google Map -->
+      <google-map
+        [zoom]="zoom"
+        [options]="mapOptions"
+        height="100%"
+        width="100%"
+        >
+        
+      </google-map>
+
+    </div>
+
+    <!-------------------------------------- แถบล่าง -------------------------------------->
+  <!-- <div class="mt-4 w-full border-t border-gray-200 pt-2">
+      <div class="mb-1 flex flex-col justify-start">
+        <p class="text-red-500">* กรุณากดซ้ำสีที่เลือกปัจจุบันเพื่อนำสีที่เลือกไว้ออก</p>
+      </div>-->
+      <!-------------------------------------- ตัวเลือกสี -------------------------------------->
+      <!-- Filter Container -->
+      <!-- <div class="flex items-end justify-center text-center w-full relative border border-gray-200 rounded-lg overflow-hidden h-full">
+  -->
+        <!-- Buttons container -->
+      <!-- <div class="flex w-full z-10">-->
+          <!-- Red -->
+        <!-- <div class="w-1/3 relative">
+            <button (click)="selectColor(0, '#f91c1c')" 
+              [class.font-bold]="activeIndex === 0"
+              [class.text-red-600]="activeIndex === 0"
+              class="w-full py-3 flex items-center justify-center relative border-r border-gray-200">
+              สีแดง
+            </button>
+            <div *ngIf="activeIndex === 0" 
+              class="absolute bottom-0 left-[10%] w-[80%] h-[10px] rounded-t-md transition-all duration-300"
+              [style.backgroundColor]="activeColor"></div>
+          </div>-->
+          <!-- Yellow -->
+          <!--<div class="w-1/3 relative">
+            <button (click)="selectColor(1, '#ffd047')" 
+              [class.font-bold]="activeIndex === 1"
+              [class.text-yellow-500]="activeIndex === 1"
+              class="w-full py-3 flex items-center justify-center relative border-r border-gray-200">
+              สีเหลือง
+            </button>
+            <div *ngIf="activeIndex === 1" 
+              class="absolute bottom-0 left-[10%] w-[80%] h-[10px] rounded-t-md transition-all duration-300"
+              [style.backgroundColor]="activeColor"></div>
+          </div>-->
+          <!-- Green -->
+          <!--<div class="w-1/3 relative">
+            <button (click)="selectColor(2, '#29d543')" 
+              [class.font-bold]="activeIndex === 2"
+              [class.text-green-500]="activeIndex === 2"
+              class="w-full py-3 flex items-center justify-center relative border-r border-gray-200">
+              สีเขียว
+            </button>
+            <div *ngIf="activeIndex === 2" 
+              class="absolute bottom-0 left-[10%] w-[80%] h-[10px] rounded-t-md transition-all duration-300"
+              [style.backgroundColor]="activeColor"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </div> -->
+    <!-- <div class="mt-3  w-full flex flex-col space-y-2">
+
+      <div class="flex items-center space-x-1 bg-gray-200 border border-gray-200  rounded-lg p-1"
+           style="box-shadow: 0 2px 0px rgba(99, 99, 99, 0.315);">
+        <img src="data:image/png;base64,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" alt="phone" class="w-4 h-4">
+        <label class="text-yellow-800 font-semibold text-sm">: {{ phone }}</label>
+      </div>
+      <div class="flex items-center space-x-1  bg-gray-200 border border-gray-200  rounded-lg p-1"
+           style="box-shadow: 0 2px 0px rgba(99, 99, 99, 0.315);">
+        <img src="data:image/png;base64,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" alt="email"
+        class="w-4 h-4"
+        >
+        <label class="text-yellow-800 font-semibold text-sm">: {{ email }}</label>
+      </div>
+    </div> -->
+
+    <!-- Modal -->
+    <app-modal-google-map *ngIf="showModal"
+      [siteId]="selectSiteId"
+      [name]="selectName"
+      [position]="selectPosition"
+      [available]="selectedAvailable"
+      [distance]="selectedDistance"
+      [price]="selectedPrice"
+      (closed)="showModal = false"
+      >
+    </app-modal-google-map>
+  </div>
+
+
+</div>
